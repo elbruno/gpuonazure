@@ -2,45 +2,138 @@
 
 ## Project Overview
 
-This is a **GPU-accelerated AI inference application** built with **Java 21**, **Spring Boot 3.2.5**, **LangChain4j 0.34.0**, and **ONNX Runtime 1.16.3** with **CUDA 12.2** support. The application generates cartoon-style images using Stable Diffusion and computes text embeddings using All-MiniLM-L6-v2, deployed to Azure Container Apps with GPU workload profiles.
+This is a **GPU-accelerated AI inference application** built with:
+- **Backend**: Java 21, Spring Boot 3.2.5, LangChain4j 0.34.0, ONNX Runtime 1.18.0, CUDA 12.6
+- **Frontend**: .NET 10, Blazor WebAssembly, JavaScript/HTML
+- **Orchestration**: .NET Aspire 13
+- **Deployment**: Azure Container Apps with GPU profiles (T4/A100), DevContainer support
+
+The application generates images using Stable Diffusion v1.5 and computes text embeddings using All-MiniLM-L6-v2, with multiple frontend options and full service orchestration.
 
 ## Technology Stack
 
+### Backend
 - **Language**: Java 21 LTS (with `--enable-preview` for virtual threads)
 - **Framework**: Spring Boot 3.2.5
 - **AI Framework**: LangChain4j 0.34.0 with ONNX Runtime integration
-- **Inference Engine**: ONNX Runtime 1.16.3 (CPU + GPU/CUDA 12.2)
+- **Inference Engine**: ONNX Runtime 1.18.0 (CPU + GPU/CUDA 12.6)
 - **Build Tool**: Maven 3.9+
-- **Cloud Platform**: Azure Container Apps with GPU profiles (T4/A100)
 - **Models**: Stable Diffusion v1.5 ONNX, All-MiniLM-L6-v2 ONNX
-- **Container Base**: nvidia/cuda:12.2.0-runtime-ubuntu22.04
+- **Container Base**: nvidia/cuda:12.6.0-cudnn-runtime-ubuntu24.04
+
+### Frontend
+- **.NET Version**: .NET 10
+- **Blazor**: WebAssembly + Server
+- **JavaScript**: Vanilla JS (HTML/CSS/JS WebUI)
+- **Styling**: Bootstrap 5.3
+
+### Orchestration & DevOps
+- **Service Orchestration**: .NET Aspire 13
+- **Development**: DevContainer (VS Code/Codespaces)
+- **Cloud Platform**: Azure Container Apps with GPU profiles
+
+## Documentation Structure
+
+**IMPORTANT**: All documentation MUST be placed in the `docs/` folder, except for:
+- `README.md` (root directory - main project overview)
+- `LICENSE` (root directory - project license)
+
+### Documentation Files Location
+
+```
+gpuonazure/
+├── README.md                                    # Main project documentation
+├── LICENSE                                      # Project license
+├── SETUP.md                                     # Quick setup guide (can be in root)
+│
+└── docs/                                        # All other documentation here
+    ├── ARCHITECTURE.md                          # System architecture
+    ├── BLAZOR-FRONTEND.md                       # Blazor frontend documentation
+    ├── HOW-TO-RUN-DEVCONTAINER.md              # DevContainer step-by-step guide
+    ├── DEVCONTAINER-BLAZOR-ASPIRE-GUIDE.md     # Integration guide
+    ├── AZURE-DEPLOYMENT-GUIDE.md               # Azure deployment
+    ├── AZURE-QUICK-REFERENCE.md                # Quick reference
+    ├── AZURE-DEPLOYMENT-CHECKLIST.md           # Deployment checklist
+    ├── DOCKER-BUILD-REFERENCE.md               # Docker build guide
+    └── [any other documentation]               # All other docs
+```
+
+### When Creating Documentation
+
+1. **Always create documentation in `docs/` folder** unless it's README.md or LICENSE
+2. **Use descriptive filenames** with UPPERCASE and hyphens (e.g., `HOW-TO-RUN-DEVCONTAINER.md`)
+3. **Include table of contents** for long documents
+4. **Cross-reference other docs** using relative paths: `[Architecture](./ARCHITECTURE.md)`
+5. **Keep README.md concise** and link to detailed docs in `docs/` folder
 
 ## Project Structure
 
 ```
 gpuonazure/
+├── .devcontainer/                              # DevContainer configuration
+│   ├── devcontainer.json                       # VS Code/Codespaces settings
+│   ├── Dockerfile                              # Dev environment image
+│   └── post-create.sh                          # Setup script
+│
 ├── src/
-│   └── main/
-│       ├── java/com/azure/gpudemo/
-│       │   ├── GpuLangchain4jDemoApplication.java    # Main entry point
-│       │   ├── config/
-│       │   │   └── LangChain4jGpuConfiguration.java  # GPU beans config
-│       │   ├── service/
-│       │   │   ├── LangChain4jGpuService.java        # Core inference
-│       │   │   └── ModelManagementService.java       # Model downloads
-│       │   └── controller/
-│       │       └── ClippyController.java             # REST API
-│       └── resources/
-│           ├── application.yml                        # Configuration
-│           └── static/
-│               ├── index.html                         # Web UI
-│               ├── css/styles.css                     # Custom styles
-│               └── js/app.js                          # Frontend logic
-├── pom.xml                                            # Maven dependencies
-├── Dockerfile                                         # Multi-stage build
-├── download-models.sh                                 # Model download script
-├── deploy-aca.sh                                      # Azure deployment
-└── README.md                                          # Project docs
+│   ├── main/                                   # Java backend
+│   │   ├── java/com/azure/gpudemo/
+│   │   │   ├── GpuLangchain4jDemoApplication.java
+│   │   │   ├── config/
+│   │   │   │   └── LangChain4jGpuConfiguration.java
+│   │   │   ├── service/
+│   │   │   │   ├── LangChain4jGpuService.java
+│   │   │   │   ├── SD4JImageGenerationService.java
+│   │   │   │   └── ModelManagementService.java
+│   │   │   └── controller/
+│   │   │       └── ImageController.java
+│   │   └── resources/
+│   │       ├── application.yml
+│   │       └── static/                         # JavaScript WebUI
+│   │           ├── index.html
+│   │           ├── css/styles.css
+│   │           └── js/app.js
+│   │
+│   ├── BlazorFrontend/                         # .NET Blazor frontend
+│   │   ├── BlazorFrontend/                     # Server project
+│   │   │   ├── Components/
+│   │   │   │   ├── Pages/
+│   │   │   │   │   └── Home.razor
+│   │   │   │   └── Layout/
+│   │   │   │       ├── MainLayout.razor
+│   │   │   │       └── NavMenu.razor
+│   │   │   ├── Program.cs
+│   │   │   └── appsettings.json
+│   │   └── BlazorFrontend.Client/              # WASM client project
+│   │       ├── Pages/
+│   │       │   ├── ImageGenerator.razor
+│   │       │   ├── Embeddings.razor
+│   │       │   └── SystemMetrics.razor
+│   │       ├── Services/
+│   │       │   └── GpuBackendService.cs
+│   │       └── Program.cs
+│   │
+│   ├── GpuAzure.AppHost/                       # Aspire orchestration
+│   │   ├── AppHost.cs
+│   │   └── appsettings.json
+│   │
+│   ├── GpuAzure.ServiceDefaults/               # Aspire defaults
+│   │   └── Extensions.cs
+│   │
+│   ├── GpuAzure.sln                            # .NET solution
+│   └── README.md                               # Aspire-specific docs
+│
+├── docs/                                       # All documentation here
+│   ├── ARCHITECTURE.md
+│   ├── BLAZOR-FRONTEND.md
+│   ├── HOW-TO-RUN-DEVCONTAINER.md
+│   └── [other documentation files]
+│
+├── scripts/                                    # Build and deployment scripts
+├── models/                                     # AI models (gitignored)
+├── pom.xml                                     # Maven configuration
+├── Dockerfile                                  # Multi-stage build
+└── README.md                                   # Main project documentation
 ```
 
 ## Coding Standards
@@ -341,3 +434,159 @@ public class GlobalExceptionHandler {
 
 **Last Updated**: September 29, 2025  
 **Project Version**: 0.0.1-SNAPSHOT
+
+## .NET and Blazor Conventions
+
+### 1. C# Coding Standards
+
+1. **C# Version**: Use C# 12 features
+   - Primary constructors
+   - Collection expressions
+   - Required properties
+   - File-scoped types
+
+2. **Blazor Patterns**:
+   - Use `@page` directive for routable components
+   - Use `@inject` for dependency injection
+   - Use `@code` block for component logic
+   - Keep component logic in code-behind when complex
+
+3. **Service Layer**:
+   - Use `IHttpClientFactory` for HTTP clients
+   - Implement retry policies with Polly
+   - Use strongly-typed configuration with `IOptions<T>`
+   - Register services with appropriate lifetime (Scoped, Singleton, Transient)
+
+### 2. Blazor Component Structure
+
+```razor
+@page "/component"
+@using Namespace.Services
+@inject ServiceName Service
+
+<PageTitle>Component Title</PageTitle>
+
+<div class="container">
+    <!-- Component markup -->
+</div>
+
+@code {
+    // Component logic
+    private string property = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+    
+    private async Task LoadDataAsync()
+    {
+        // Load data
+    }
+}
+```
+
+### 3. API Client Pattern
+
+```csharp
+public class BackendService
+{
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<BackendService> _logger;
+    
+    public BackendService(HttpClient httpClient, ILogger<BackendService> logger)
+    {
+        _httpClient = httpClient;
+        _logger = logger;
+    }
+    
+    public async Task<Result?> GetDataAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _httpClient.GetFromJsonAsync<Result>("/api/endpoint", cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Failed to fetch data");
+            throw;
+        }
+    }
+}
+```
+
+## .NET Aspire Orchestration
+
+### 1. AppHost Configuration
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add Java backend as executable
+var javaBackend = builder.AddExecutable("java-backend", "mvn",
+    workingDirectory: "../..", 
+    args: ["spring-boot:run"])
+    .WithHttpEndpoint(port: 8080, name: "http");
+
+// Add Blazor frontend with service discovery
+var blazorFrontend = builder.AddProject<Projects.BlazorFrontend>("blazor-frontend")
+    .WithEnvironment("services__java-backend__http__0", javaBackend.GetEndpoint("http"));
+
+builder.Build().Run();
+```
+
+### 2. Running with Aspire
+
+```bash
+# Start all services
+cd src/GpuAzure.AppHost
+dotnet run
+
+# Access Aspire Dashboard
+open http://localhost:15000
+```
+
+## Documentation Guidelines
+
+### 1. File Organization
+
+- **All documentation in `docs/` folder** except README.md and LICENSE
+- Use descriptive UPPERCASE filenames with hyphens
+- Include table of contents for long documents
+- Cross-reference using relative paths
+
+### 2. Required Documentation Files
+
+- `README.md` (root) - Project overview and quick start
+- `docs/ARCHITECTURE.md` - System architecture and components
+- `docs/HOW-TO-RUN-DEVCONTAINER.md` - DevContainer setup guide
+- `docs/BLAZOR-FRONTEND.md` - Blazor frontend documentation
+- `docs/DEVCONTAINER-BLAZOR-ASPIRE-GUIDE.md` - Integration guide
+
+## Notes for AI Assistants
+
+### .NET
+- **Always** use .NET 10 and C# 12 features
+- **Always** implement proper error handling in Blazor components
+- **Always** use cancellation tokens for async operations
+- **Always** dispose of HttpClient properly (use IHttpClientFactory)
+- **Prefer** scoped services for Blazor Server, singleton for static data
+- **Prefer** async/await patterns over blocking calls
+
+### Aspire
+- **Always** use service discovery instead of hardcoded URLs
+- **Always** implement health checks for services
+- **Always** use structured logging
+- **Prefer** Aspire AppHost for local development
+
+### Documentation
+- **Always** place documentation in `docs/` folder (except README.md and LICENSE)
+- **Always** include table of contents for long documents
+- **Always** use descriptive filenames (e.g., `HOW-TO-RUN-DEVCONTAINER.md`)
+- **Never** duplicate content across multiple files (link instead)
+
+---
+
+**Last Updated**: December 2, 2025  
+**Project Version**: 1.0.0  
+**Stack**: Java 21 + Spring Boot 3.2.5 + .NET 10 + Blazor + Aspire 13
