@@ -4,6 +4,12 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install essential utilities FIRST (required by docker-in-docker feature)
+RUN apt-get update && apt-get install -y \
+    coreutils \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
 # Configure apt and install base packages
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
@@ -60,8 +66,8 @@ RUN apt-get update && apt-get install -y \
 
 # Set CUDA environment variables
 ENV CUDA_HOME=/usr/local/cuda
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
 ENV PATH=/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64
 
 # Install Node.js and npm (for frontend tooling if needed)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
