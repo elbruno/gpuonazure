@@ -66,7 +66,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set CUDA environment variables (paths may not exist if CUDA not installed)
-# Applications should gracefully handle missing CUDA
+# These are set unconditionally to allow the same container to work on both
+# GPU and non-GPU hosts. Applications should detect GPU availability at runtime.
+# Having these paths set doesn't cause errors even if directories don't exist.
 ENV CUDA_HOME=/usr/local/cuda
 ENV PATH=/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64
