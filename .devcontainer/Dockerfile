@@ -4,13 +4,7 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install essential utilities FIRST (required by docker-in-docker feature)
-RUN apt-get update && apt-get install -y \
-    coreutils \
-    procps \
-    && rm -rf /var/lib/apt/lists/*
-
-# Configure apt and install base packages
+# Configure apt and install base packages (including essential utilities for docker-in-docker)
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -26,6 +20,9 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     unzip \
     zip \
+    coreutils \
+    procps \
+    util-linux \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Java 21 (OpenJDK)

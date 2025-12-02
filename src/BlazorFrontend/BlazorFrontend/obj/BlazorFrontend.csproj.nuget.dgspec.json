@@ -1,25 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend/BlazorFrontend.csproj": {}
+    "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend\\BlazorFrontend.csproj": {}
   },
   "projects": {
-    "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/BlazorFrontend.Client.csproj": {
+    "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\BlazorFrontend.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/BlazorFrontend.Client.csproj",
+        "projectUniqueName": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\BlazorFrontend.Client.csproj",
         "projectName": "BlazorFrontend.Client",
-        "projectPath": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/BlazorFrontend.Client.csproj",
-        "packagesPath": "/home/runner/.nuget/packages/",
-        "outputPath": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/obj/",
+        "projectPath": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\BlazorFrontend.Client.csproj",
+        "packagesPath": "C:\\Users\\brunocapuano\\.nuget\\packages\\",
+        "outputPath": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/runner/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\brunocapuano\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -83,18 +90,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[10.0.0, 10.0.0]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -377,33 +378,40 @@
         }
       }
     },
-    "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend/BlazorFrontend.csproj": {
+    "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend\\BlazorFrontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend/BlazorFrontend.csproj",
+        "projectUniqueName": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend\\BlazorFrontend.csproj",
         "projectName": "BlazorFrontend",
-        "projectPath": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend/BlazorFrontend.csproj",
-        "packagesPath": "/home/runner/.nuget/packages/",
-        "outputPath": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend/obj/",
+        "projectPath": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend\\BlazorFrontend.csproj",
+        "packagesPath": "C:\\Users\\brunocapuano\\.nuget\\packages\\",
+        "outputPath": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/runner/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\brunocapuano\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/BlazorFrontend.Client.csproj": {
-                "projectPath": "/home/runner/work/gpuonazure/gpuonazure/src/BlazorFrontend/BlazorFrontend.Client/BlazorFrontend.Client.csproj"
+              "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\BlazorFrontend.Client.csproj": {
+                "projectPath": "D:\\elbruno\\gpuonazure\\src\\BlazorFrontend\\BlazorFrontend.Client\\BlazorFrontend.Client.csproj"
               },
-              "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/GpuAzure.ServiceDefaults.csproj": {
-                "projectPath": "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/GpuAzure.ServiceDefaults.csproj"
+              "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\GpuAzure.ServiceDefaults.csproj": {
+                "projectPath": "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\GpuAzure.ServiceDefaults.csproj"
               }
             }
           }
@@ -454,7 +462,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -872,22 +880,29 @@
         }
       }
     },
-    "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/GpuAzure.ServiceDefaults.csproj": {
+    "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\GpuAzure.ServiceDefaults.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/GpuAzure.ServiceDefaults.csproj",
+        "projectUniqueName": "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\GpuAzure.ServiceDefaults.csproj",
         "projectName": "GpuAzure.ServiceDefaults",
-        "projectPath": "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/GpuAzure.ServiceDefaults.csproj",
-        "packagesPath": "/home/runner/.nuget/packages/",
-        "outputPath": "/home/runner/work/gpuonazure/gpuonazure/src/GpuAzure.ServiceDefaults/obj/",
+        "projectPath": "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\GpuAzure.ServiceDefaults.csproj",
+        "packagesPath": "C:\\Users\\brunocapuano\\.nuget\\packages\\",
+        "outputPath": "D:\\elbruno\\gpuonazure\\src\\GpuAzure.ServiceDefaults\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/runner/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\brunocapuano\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -960,7 +975,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
