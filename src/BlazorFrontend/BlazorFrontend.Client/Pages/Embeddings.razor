@@ -1,0 +1,207 @@
+@page "/embeddings"
+@using BlazorFrontend.Client.Services
+@inject GpuBackendService BackendService
+@inject ILogger<Embeddings> Logger
+
+<PageTitle>Text Embeddings</PageTitle>
+
+<div class="container mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-text-paragraph"></i> Text Similarity Comparison
+    </h1>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Compare Text Similarity</h5>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@embeddingRequest" OnValidSubmit="@CompareTextsAsync">
+                        <div class="mb-3">
+                            <label for="text1" class="form-label">Text 1</label>
+                            <textarea 
+                                class="form-control" 
+                                id="text1" 
+                                rows="3" 
+                                @bind="embeddingRequest.Text1"
+                                placeholder="Azure Container Apps"
+                                disabled="@isComparing"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text2" class="form-label">Text 2</label>
+                            <textarea 
+                                class="form-control" 
+                                id="text2" 
+                                rows="3" 
+                                @bind="embeddingRequest.Text2"
+                                placeholder="Cloud container platform"
+                                disabled="@isComparing"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isComparing">
+                            @if (isComparing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                <span>Comparing...</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-graph-up"></i>
+                                <span> Compare Similarity</span>
+                            }
+                        </button>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> @errorMessage
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (comparisonResult != null)
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Similarity Result</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <div class="display-3 fw-bold" style="color: @GetSimilarityColor(comparisonResult.Similarity)">
+                                @((comparisonResult.Similarity * 100).ToString("F1"))%
+                            </div>
+                            <p class="text-muted">Semantic Similarity Score</p>
+                        </div>
+
+                        <div class="progress mb-3" style="height: 30px;">
+                            <div class="progress-bar @GetProgressBarClass(comparisonResult.Similarity)" 
+                                 role="progressbar" 
+                                 style="width: @((comparisonResult.Similarity * 100).ToString("F1"))%"
+                                 aria-valuenow="@((int)(comparisonResult.Similarity * 100))" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                @((comparisonResult.Similarity * 100).ToString("F1"))%
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>Interpretation:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li><strong>90-100%:</strong> Very similar or nearly identical meaning</li>
+                                <li><strong>70-90%:</strong> Strong semantic similarity</li>
+                                <li><strong>50-70%:</strong> Moderate similarity</li>
+                                <li><strong>0-50%:</strong> Low similarity or different topics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">Sample Comparisons</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Try these examples to see how text embeddings work:</p>
+                    
+                    <div class="mb-3">
+                        <strong>High Similarity:</strong>
+                        <button class="btn btn-sm btn-outline-primary ms-2" 
+                                @onclick="() => SetTexts(&quot;GPU acceleration&quot;, &quot;CUDA processing&quot;)">
+                            Try Example
+                        </button>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Medium Similarity:</strong>
+                        <button class="btn btn-sm btn-outline-primary ms-2" 
+                                @onclick="() => SetTexts(&quot;Machine learning&quot;, &quot;Artificial intelligence&quot;)">
+                            Try Example
+                        </button>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Low Similarity:</strong>
+                        <button class="btn btn-sm btn-outline-primary ms-2" 
+                                @onclick="() => SetTexts(&quot;Cloud computing&quot;, &quot;Pizza delivery&quot;)">
+                            Try Example
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private EmbeddingRequest embeddingRequest = new() { Text1 = "", Text2 = "" };
+    private EmbeddingResponse? comparisonResult;
+    private bool isComparing;
+    private string? errorMessage;
+
+    private async Task CompareTextsAsync()
+    {
+        if (string.IsNullOrWhiteSpace(embeddingRequest.Text1) || string.IsNullOrWhiteSpace(embeddingRequest.Text2))
+        {
+            errorMessage = "Please enter both texts to compare";
+            return;
+        }
+
+        isComparing = true;
+        errorMessage = null;
+        comparisonResult = null;
+
+        try
+        {
+            comparisonResult = await BackendService.CompareEmbeddingsAsync(
+                embeddingRequest.Text1,
+                embeddingRequest.Text2);
+
+            if (comparisonResult == null)
+            {
+                errorMessage = "Failed to compare texts. Please check if the backend service is running.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error comparing texts");
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isComparing = false;
+        }
+    }
+
+    private void SetTexts(string text1, string text2)
+    {
+        embeddingRequest.Text1 = text1;
+        embeddingRequest.Text2 = text2;
+    }
+
+    private string GetSimilarityColor(double similarity)
+    {
+        return similarity switch
+        {
+            >= 0.9 => "#28a745", // Green
+            >= 0.7 => "#17a2b8", // Cyan
+            >= 0.5 => "#ffc107", // Yellow
+            _ => "#dc3545"       // Red
+        };
+    }
+
+    private string GetProgressBarClass(double similarity)
+    {
+        return similarity switch
+        {
+            >= 0.9 => "bg-success",
+            >= 0.7 => "bg-info",
+            >= 0.5 => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+}

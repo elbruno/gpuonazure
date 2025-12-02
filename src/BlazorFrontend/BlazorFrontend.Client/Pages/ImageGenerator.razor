@@ -1,0 +1,200 @@
+@page "/image-generator"
+@using BlazorFrontend.Client.Services
+@inject GpuBackendService BackendService
+@inject ILogger<ImageGenerator> Logger
+
+<PageTitle>Image Generator</PageTitle>
+
+<div class="container mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-image"></i> AI Image Generator
+    </h1>
+    
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Generate Image</h5>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@imageRequest" OnValidSubmit="@GenerateImageAsync">
+                        <DataAnnotationsValidator />
+                        
+                        <div class="mb-3">
+                            <label for="prompt" class="form-label">Prompt</label>
+                            <textarea 
+                                class="form-control" 
+                                id="prompt" 
+                                rows="4" 
+                                @bind="imageRequest.Prompt"
+                                placeholder="A friendly robot helping with Azure deployment"
+                                disabled="@isGenerating"></textarea>
+                            <div class="form-text">Describe the image you want to generate</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="style" class="form-label">Style</label>
+                            <select class="form-select" id="style" @bind="imageRequest.Style" disabled="@isGenerating">
+                                <option value="CLASSIC">Classic</option>
+                                <option value="HAPPY">Happy</option>
+                                <option value="CONFUSED">Confused</option>
+                                <option value="EXCITED">Excited</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isGenerating">
+                            @if (isGenerating)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                <span>Generating... This may take 30-60 seconds</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-magic"></i>
+                                <span> Generate Image</span>
+                            }
+                        </button>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> @errorMessage
+                        </div>
+                    }
+
+                    @if (generationTime > 0)
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="bi bi-check-circle"></i> Generated in @generationTime.ToString("F2") seconds
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">Sample Prompts</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <a href="#" @onclick="() => SetPrompt(&quot;A friendly robot helping with Azure deployment&quot;)" @onclick:preventDefault>
+                                A friendly robot helping with Azure deployment
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" @onclick="() => SetPrompt(&quot;A futuristic data center with glowing servers&quot;)" @onclick:preventDefault>
+                                A futuristic data center with glowing servers
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" @onclick="() => SetPrompt(&quot;A cartoon cloud computing infrastructure&quot;)" @onclick:preventDefault>
+                                A cartoon cloud computing infrastructure
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" @onclick="() => SetPrompt(&quot;An AI brain connected to GPU processors&quot;)" @onclick:preventDefault>
+                                An AI brain connected to GPU processors
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Generated Image</h5>
+                </div>
+                <div class="card-body text-center">
+                    @if (generatedImageData != null)
+                    {
+                        <img src="data:image/png;base64,@Convert.ToBase64String(generatedImageData)" 
+                             alt="Generated Image" 
+                             class="img-fluid rounded shadow" 
+                             style="max-width: 512px;" />
+                        
+                        <div class="mt-3">
+                            <a href="data:image/png;base64,@Convert.ToBase64String(generatedImageData)" 
+                               download="generated-image.png" 
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-download"></i> Download Image
+                            </a>
+                        </div>
+                    }
+                    else if (isGenerating)
+                    {
+                        <div class="text-center p-5">
+                            <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted">Generating your image with GPU-accelerated Stable Diffusion...</p>
+                            <small class="text-muted">This typically takes 30-60 seconds on CPU, or 2-5 seconds on GPU</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center p-5 text-muted">
+                            <i class="bi bi-image" style="font-size: 4rem;"></i>
+                            <p class="mt-3">Enter a prompt and click "Generate Image" to create an AI-generated image</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ImageRequest imageRequest = new() { Prompt = "", Style = "CLASSIC" };
+    private byte[]? generatedImageData;
+    private bool isGenerating;
+    private string? errorMessage;
+    private double generationTime;
+
+    private async Task GenerateImageAsync()
+    {
+        if (string.IsNullOrWhiteSpace(imageRequest.Prompt))
+        {
+            errorMessage = "Please enter a prompt";
+            return;
+        }
+
+        isGenerating = true;
+        errorMessage = null;
+        generatedImageData = null;
+        generationTime = 0;
+
+        try
+        {
+            var startTime = DateTime.UtcNow;
+            
+            generatedImageData = await BackendService.GenerateImageAsync(
+                imageRequest.Prompt, 
+                imageRequest.Style);
+
+            generationTime = (DateTime.UtcNow - startTime).TotalSeconds;
+
+            if (generatedImageData == null)
+            {
+                errorMessage = "Failed to generate image. Please check if the backend service is running.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error generating image");
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isGenerating = false;
+        }
+    }
+
+    private void SetPrompt(string prompt)
+    {
+        imageRequest.Prompt = prompt;
+    }
+}

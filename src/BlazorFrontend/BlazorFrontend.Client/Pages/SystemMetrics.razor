@@ -1,0 +1,246 @@
+@page "/metrics"
+@using BlazorFrontend.Client.Services
+@inject GpuBackendService BackendService
+@inject ILogger<SystemMetrics> Logger
+@implements IDisposable
+
+<PageTitle>System Metrics</PageTitle>
+
+<div class="container mt-4">
+    <h1 class="mb-4">
+        <i class="bi bi-speedometer2"></i> System Metrics & Health
+    </h1>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            @if (isLoading && metrics == null)
+            {
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading system metrics...</p>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @errorMessage
+                    <button class="btn btn-sm btn-outline-danger mt-2" @onclick="LoadMetricsAsync">
+                        <i class="bi bi-arrow-clockwise"></i> Retry
+                    </button>
+                </div>
+            }
+            else if (metrics != null)
+            {
+                <!-- System Status Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">System Status</h5>
+                            <button class="btn btn-sm btn-light" @onclick="LoadMetricsAsync" disabled="@isLoading">
+                                <i class="bi bi-arrow-clockwise @(isLoading ? "spin" : "")"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-gpu-card fs-3 me-3 @(metrics.GpuAvailable ? "text-success" : "text-secondary")"></i>
+                                    <div>
+                                        <h6 class="mb-0">GPU Status</h6>
+                                        <p class="mb-0 @(metrics.GpuAvailable ? "text-success" : "text-warning")">
+                                            @(metrics.GpuAvailable ? "Available" : "Not Available (CPU Mode)")
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-box-seam fs-3 me-3 @(metrics.ModelsLoaded ? "text-success" : "text-danger")"></i>
+                                    <div>
+                                        <h6 class="mb-0">Models Status</h6>
+                                        <p class="mb-0 @(metrics.ModelsLoaded ? "text-success" : "text-danger")">
+                                            @(metrics.ModelsLoaded ? "Loaded" : "Not Loaded")
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> ONNX Runtime: @metrics.OnnxRuntimeVersion
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Models Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">AI Models</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (metrics.Models != null && metrics.Models.Any())
+                        {
+                            <div class="list-group list-group-flush">
+                                @foreach (var model in metrics.Models)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">
+                                                    @GetModelDisplayName(model.Key)
+                                                    @if (model.Value.Available)
+                                                    {
+                                                        <span class="badge bg-success ms-2">Available</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-danger ms-2">Unavailable</span>
+                                                    }
+                                                </h6>
+                                                <p class="mb-1 text-muted small">
+                                                    <strong>Provider:</strong> @model.Value.Provider
+                                                </p>
+                                                @if (!string.IsNullOrEmpty(model.Value.Status))
+                                                {
+                                                    <p class="mb-1 text-muted small">
+                                                        <strong>Status:</strong> @model.Value.Status
+                                                    </p>
+                                                }
+                                                @if (!string.IsNullOrEmpty(model.Value.Model))
+                                                {
+                                                    <p class="mb-0 text-muted small">
+                                                        <strong>Model:</strong> @model.Value.Model
+                                                    </p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">No models information available</p>
+                        }
+                    </div>
+                </div>
+
+                <!-- Backend Connection Card -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Backend Connection</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            @if (isHealthy)
+                            {
+                                <i class="bi bi-check-circle-fill fs-3 me-3 text-success"></i>
+                                <div>
+                                    <h6 class="mb-0">Connected</h6>
+                                    <p class="mb-0 text-success">Java backend is responding normally</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <i class="bi bi-x-circle-fill fs-3 me-3 text-danger"></i>
+                                <div>
+                                    <h6 class="mb-0">Disconnected</h6>
+                                    <p class="mb-0 text-danger">Unable to reach Java backend</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+@code {
+    private MetricsResponse? metrics;
+    private bool isLoading;
+    private bool isHealthy;
+    private string? errorMessage;
+    private System.Threading.Timer? refreshTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMetricsAsync();
+        
+        // Auto-refresh every 10 seconds
+        refreshTimer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadMetricsAsync();
+                StateHasChanged();
+            });
+        }, null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+    }
+
+    private async Task LoadMetricsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            // Check health first
+            isHealthy = await BackendService.IsHealthyAsync();
+
+            if (isHealthy)
+            {
+                metrics = await BackendService.GetMetricsAsync();
+                
+                if (metrics == null)
+                {
+                    errorMessage = "Failed to load metrics from backend";
+                }
+            }
+            else
+            {
+                errorMessage = "Backend service is not responding. Please ensure the Java application is running.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading metrics");
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private string GetModelDisplayName(string key)
+    {
+        return key switch
+        {
+            "stableDiffusion" => "Stable Diffusion v1.5",
+            "allMiniLmL6V2" => "All-MiniLM-L6-v2 (Embeddings)",
+            _ => key
+        };
+    }
+
+    public void Dispose()
+    {
+        refreshTimer?.Dispose();
+    }
+}

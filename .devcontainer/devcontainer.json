@@ -1,0 +1,104 @@
+{
+  "name": "GPU Azure Development",
+  "dockerFile": "Dockerfile",
+  
+  "runArgs": [
+    "--gpus=all",
+    "--cap-add=SYS_PTRACE",
+    "--security-opt=seccomp=unconfined"
+  ],
+
+  "mounts": [
+    "source=${localWorkspaceFolder}/models,target=/workspace/models,type=bind,consistency=cached"
+  ],
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-spring-boot-dashboard",
+        "pivotal.vscode-spring-boot",
+        "redhat.java",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "ms-dotnettools.blazorwasm-companion",
+        "ms-azuretools.vscode-docker",
+        "ms-azuretools.vscode-azurecontainerapps",
+        "ms-azuretools.vscode-azurefunctions",
+        "github.copilot",
+        "github.copilot-chat",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk-amd64",
+        "java.configuration.runtimes": [
+          {
+            "name": "JavaSE-21",
+            "path": "/usr/lib/jvm/java-21-openjdk-amd64",
+            "default": true
+          }
+        ],
+        "spring-boot.ls.java.home": "/usr/lib/jvm/java-21-openjdk-amd64",
+        "maven.executable.path": "/usr/bin/mvn",
+        "dotnet.defaultSolution": "${workspaceFolder}/src/GpuAzure.AppHost/GpuAzure.AppHost.sln",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "forwardPorts": [
+    8080,
+    5000,
+    5001,
+    15000,
+    18888
+  ],
+
+  "portsAttributes": {
+    "8080": {
+      "label": "Java Backend API",
+      "onAutoForward": "notify"
+    },
+    "5000": {
+      "label": "Blazor Frontend (HTTP)",
+      "onAutoForward": "notify"
+    },
+    "5001": {
+      "label": "Blazor Frontend (HTTPS)",
+      "onAutoForward": "notify"
+    },
+    "15000": {
+      "label": "Aspire Dashboard (HTTP)",
+      "onAutoForward": "openBrowser"
+    },
+    "18888": {
+      "label": "Aspire Dashboard (HTTPS)",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "remoteUser": "vscode",
+  
+  "containerEnv": {
+    "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "MAVEN_HOME": "/usr/share/maven",
+    "DOTNET_ROOT": "/usr/share/dotnet",
+    "PATH": "${containerEnv:PATH}:/usr/lib/jvm/java-21-openjdk-amd64/bin:/usr/share/maven/bin:/usr/share/dotnet",
+    "CUDA_HOME": "/usr/local/cuda",
+    "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:${containerEnv:LD_LIBRARY_PATH}"
+  }
+}
