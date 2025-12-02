@@ -6,9 +6,13 @@
 
 #### Issue: "nvidia-container-cli: initialization error: WSL environment detected but no adapters were found"
 
-**Cause**: The DevContainer is trying to use GPU support but your system doesn't have an NVIDIA GPU or the drivers aren't properly configured.
+**Cause**: The DevContainer was trying to use GPU support but your system doesn't have an NVIDIA GPU or the drivers aren't properly configured.
 
-**Solution**: This has been fixed in the latest devcontainer.json. The container now runs in CPU-only mode when GPU is not available.
+**Solution**: This has been fixed in the latest devcontainer.json. The container now:
+- Gracefully handles missing CUDA toolkit during build (won't fail if unavailable)
+- Removed the `--privileged` flag that could cause permission issues on non-GPU systems
+- Runs in CPU-only mode when GPU is not available
+- GPU is auto-detected by VS Code if available (no manual configuration needed)
 
 - **For Development**: CPU-only mode is perfectly fine. The application will work without GPU, just slower for inference.
 - **For Production**: Deploy to Azure Container Apps with GPU profiles (NC8as_T4_v3 or NC24ads_A100_v4) where GPU will be available.
