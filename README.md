@@ -211,13 +211,17 @@ This project includes a complete DevContainer configuration for VS Code and GitH
 The DevContainer includes:
 - ✅ Java 21 JDK with Maven
 - ✅ .NET 10 SDK with Aspire workload
-- ✅ CUDA Toolkit (for GPU support on compatible hosts)
+- ✅ CUDA Toolkit (optional - gracefully handled if unavailable)
 - ✅ Azure CLI
 - ✅ Docker-in-Docker
 - ✅ All VS Code extensions (Java, C#, Blazor, Docker, Azure)
 - ✅ Pre-configured debugging and tasks
 
-**Note**: GPU support requires a host with NVIDIA drivers. CPU mode works everywhere.
+**Note**: 
+- ✅ **Works on laptops without GPU** - The DevContainer will build successfully even without GPU support
+- GPU support is automatically detected by VS Code if available
+- CPU mode works everywhere and is perfectly fine for development
+- For GPU-accelerated inference, deploy to Azure Container Apps with GPU profiles
 
 ## 🌟 Running with .NET Aspire
 

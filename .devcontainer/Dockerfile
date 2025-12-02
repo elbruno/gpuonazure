@@ -60,11 +60,15 @@ ENV PATH="/home/vscode/.aspire/bin:${PATH}"
 
 # Install NVIDIA CUDA Toolkit (for GPU support)
 # Note: Full GPU support requires running on a host with NVIDIA drivers
-RUN apt-get update && apt-get install -y \
-    nvidia-cuda-toolkit \
-    && rm -rf /var/lib/apt/lists/*
+# Installation is optional and will not fail if CUDA is unavailable
+RUN apt-get update && \
+    (apt-get install -y nvidia-cuda-toolkit || echo "CUDA toolkit not available - continuing with CPU-only support") && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set CUDA environment variables
+# Set CUDA environment variables (paths may not exist if CUDA not installed)
+# These are set unconditionally to allow the same container to work on both
+# GPU and non-GPU hosts. Applications should detect GPU availability at runtime.
+# Having these paths set doesn't cause errors even if directories don't exist.
 ENV CUDA_HOME=/usr/local/cuda
 ENV PATH=/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64

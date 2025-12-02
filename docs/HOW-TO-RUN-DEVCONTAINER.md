@@ -14,6 +14,20 @@ This guide provides detailed step-by-step instructions for running the GPU-accel
 
 ## Prerequisites
 
+### Important: Works Without GPU! 🎉
+
+**The DevContainer now works perfectly on laptops without GPU!** 
+- ✅ No NVIDIA GPU required
+- ✅ No CUDA drivers needed on host
+- ✅ No special Docker configuration required
+- ✅ CPU-only mode is fully supported
+
+The container will automatically:
+- Detect if GPU is available (via VS Code)
+- Gracefully handle missing CUDA toolkit
+- Run in CPU-only mode if GPU not present
+- Still provide fast development experience
+
 ### For Visual Studio Code
 
 **Required:**
