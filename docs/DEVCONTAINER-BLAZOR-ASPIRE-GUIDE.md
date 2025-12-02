@@ -316,7 +316,7 @@ builder.Services.AddCors(options =>
 
 **Solutions:**
 1. Verify .NET 10 SDK: `dotnet --version`
-2. Install Aspire workload: `dotnet workload install aspire`
+2. Install Aspire CLI (native executable): `curl -sSL https://aspire.dev/install.sh | bash`
 3. Check port availability (15000, 18888)
 4. Update templates: `dotnet new install Aspire.ProjectTemplates@13.0.1`
 
@@ -470,7 +470,7 @@ dotnet publish -c Release
 - [ ] Maven installed
 - [ ] Models downloaded (`./scripts/download-missing-models.sh`)
 - [ ] ONNX Runtime Extensions built (`./scripts/download-ortextensions.sh`)
-- [ ] Aspire workload installed (`dotnet workload install aspire`)
+- [ ] Aspire CLI installed (native executable via `curl -sSL https://aspire.dev/install.sh | bash`)
 - [ ] Port 8080 available (Java backend)
 - [ ] Port 5000/5001 available (Blazor frontend)
 - [ ] Port 15000 available (Aspire Dashboard)

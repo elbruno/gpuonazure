@@ -12,7 +12,7 @@ This directory contains the .NET Aspire orchestration projects for the GPU-accel
 ## Prerequisites
 
 - .NET 10 SDK
-- .NET Aspire 13 workload (install with `dotnet workload install aspire`)
+- .NET Aspire 13 CLI (install native executable: `curl -sSL https://aspire.dev/install.sh | bash`)
 - Java 21 JDK
 - Maven 3.9+
 

@@ -43,8 +43,14 @@ RUN wget https://dot.net/v1/dotnet-install.sh -O /tmp/dotnet-install.sh \
 ENV DOTNET_ROOT=/usr/share/dotnet
 ENV PATH="${DOTNET_ROOT}:${PATH}"
 
-# Install .NET Aspire workload
-RUN dotnet workload install aspire
+# Install .NET Aspire CLI as native executable (recommended method)
+# This installs Aspire CLI as a standalone binary instead of using dotnet workload
+# See: https://aspire.dev/get-started/install-cli/#install-as-a-native-executable
+RUN curl -sSL https://aspire.dev/install.sh | bash \
+    && echo 'export PATH="$HOME/.aspire/bin:$PATH"' >> /home/vscode/.bashrc
+
+# Add Aspire to PATH for the build process
+ENV PATH="/home/vscode/.aspire/bin:${PATH}"
 
 # Install NVIDIA CUDA Toolkit (for GPU support)
 # Note: Full GPU support requires running on a host with NVIDIA drivers

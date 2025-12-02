@@ -97,7 +97,7 @@ A production-ready demonstration of GPU-accelerated AI inference using **LangCha
 - **Java 21 LTS** (with `--enable-preview` flag)
 - **Maven 3.9+**
 - **.NET 10 SDK** ([Download](https://dotnet.microsoft.com/download/dotnet/10.0))
-- **.NET Aspire 13 workload** (install with `dotnet workload install aspire`)
+- **.NET Aspire 13 CLI** (install native executable: `curl -sSL https://aspire.dev/install.sh | bash`)
 - **NVIDIA GPU** with CUDA 12.6+ support (optional, for GPU acceleration)
 - **CUDA Toolkit 12.6** (optional)
 - **Docker** (optional, for containerization)
