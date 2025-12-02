@@ -1,0 +1,15 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.0.1">
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorFrontend\BlazorFrontend\BlazorFrontend.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>260f7245-2bc9-47e3-975e-089bbc68e377</UserSecretsId>
+  </PropertyGroup>
+
+</Project>

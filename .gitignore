@@ -22,6 +22,32 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+# .NET / C#
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# .NET Core
+.dotnet/
+.tools/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
 # Spring Boot
 spring-boot-*.log
 spring.log

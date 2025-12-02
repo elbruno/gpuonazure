@@ -1,25 +1,33 @@
-# GPU-Accelerated Image Generation with LangChain4j
+# GPU-Accelerated AI Platform with .NET Aspire Orchestration
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-green?style=flat-square)
 ![LangChain4j](https://img.shields.io/badge/LangChain4j-0.34.0-blue?style=flat-square)
 ![ONNX Runtime](https://img.shields.io/badge/ONNX%20Runtime-1.18.0-purple?style=flat-square)
 ![CUDA](https://img.shields.io/badge/CUDA-12.6-brightgreen?style=flat-square)
+![.NET](https://img.shields.io/badge/.NET-10-blueviolet?style=flat-square)
+![Blazor](https://img.shields.io/badge/Blazor-WebAssembly-512BD4?style=flat-square)
+![Aspire](https://img.shields.io/badge/Aspire-13-00ADD8?style=flat-square)
 
-A production-ready demonstration of GPU-accelerated AI inference using **LangChain4j** with **ONNX Runtime** and **CUDA**, deployed to **Azure Container Apps** with GPU support.
+A production-ready demonstration of GPU-accelerated AI inference using **LangChain4j** with **ONNX Runtime** and **CUDA**, featuring a modern **Blazor WebAssembly** frontend orchestrated by **.NET Aspire 13**, deployable to **Azure Container Apps** with GPU support.
 
 ## 🚀 Features
 
-- **GPU-Accelerated Inference**: CUDA 12.2 with ONNX Runtime for high-performance AI
+- **GPU-Accelerated Inference**: CUDA 12.6 with ONNX Runtime for high-performance AI
 - **Stable Diffusion Image Generation**: Powered by Oracle's **SD4J** (Stable Diffusion for Java) 🎉
   - Complete CLIP tokenizer, U-Net, VAE decoder, and scheduler implementation
   - Multiple scheduler algorithms (LMS, Euler Ancestral)
   - Optional NSFW safety checker
   - Generate high-quality cartoon-style images from text prompts
 - **Text Embeddings**: Semantic similarity with All-MiniLM-L6-v2 model via LangChain4j
-- **Modern Stack**: Java 21 virtual threads, Spring Boot 3.2.5, LangChain4j 0.34.0, SD4J
+- **Modern Stack**: 
+  - Backend: Java 21, Spring Boot 3.2.5, LangChain4j 0.34.0, SD4J
+  - Frontend: .NET 10, Blazor WebAssembly
+  - Orchestration: .NET Aspire 13
+- **Blazor WebAssembly UI**: Modern, interactive frontend with real-time updates
+- **.NET Aspire Orchestration**: Service discovery, health checks, distributed tracing
+- **DevContainer Support**: Ready-to-use development environment with VS Code/GitHub Codespaces
 - **Cloud-Ready**: Containerized with Docker, deployable to Azure Container Apps
-- **Interactive UI**: Web-based interface with real-time metrics
 - **Production-Grade**: Health checks, graceful shutdown, monitoring endpoints
 
 ## 🎨 Example Output
@@ -40,6 +48,8 @@ A production-ready demonstration of GPU-accelerated AI inference using **LangCha
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
+- [Running with Aspire](#running-with-aspire)
+- [DevContainer Setup](#devcontainer-setup)
 - [Local Development](#local-development)
 - [Azure Deployment](#azure-deployment)
 - [API Documentation](#api-documentation)
@@ -50,32 +60,35 @@ A production-ready demonstration of GPU-accelerated AI inference using **LangCha
 
 ## 🏗️ Architecture
 
+### Modern Microservices Architecture with .NET Aspire
+
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         Web UI                              │
-│              (HTML + Tailwind CSS + JavaScript)             │
-└──────────────────────┬──────────────────────────────────────┘
-                       │ REST API
-┌──────────────────────▼──────────────────────────────────────┐
-│                   Spring Boot Controller                    │
-│                   (ImageController.java)                    │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────┐
-│                LangChain4j GPU Service                      │
-│              (LangChain4jGpuService.java)                   │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────┐
-│                   ONNX Runtime (GPU)                        │
-│           • Stable Diffusion v1.5 (Image Gen)               │
-│           • All-MiniLM-L6-v2 (Embeddings)                   │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────┐
-│                    NVIDIA CUDA 12.2                         │
-│                  (GPU Acceleration Layer)                   │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                     .NET Aspire Dashboard                       │
+│        (Service Discovery, Health Checks, Telemetry)            │
+└────────────────┬──────────────────────────┬─────────────────────┘
+                 │                          │
+    ┌────────────▼──────────┐  ┌───────────▼────────────┐
+    │   Java Backend        │  │   Blazor Frontend      │
+    │   Spring Boot 3.2.5   │  │   .NET 10 WebAssembly  │
+    │   Port: 8080          │◄─┤   Port: 5000/5001      │
+    └────────────┬───────────┘  └────────────────────────┘
+                 │
+    ┌────────────▼──────────────────────────────────────┐
+    │           LangChain4j GPU Service                 │
+    │        (LangChain4jGpuService.java)               │
+    └────────────┬──────────────────────────────────────┘
+                 │
+    ┌────────────▼──────────────────────────────────────┐
+    │           ONNX Runtime (GPU)                      │
+    │    • Stable Diffusion v1.5 (Image Gen)            │
+    │    • All-MiniLM-L6-v2 (Embeddings)                │
+    └────────────┬──────────────────────────────────────┘
+                 │
+    ┌────────────▼──────────────────────────────────────┐
+    │           NVIDIA CUDA 12.6                        │
+    │        (GPU Acceleration Layer)                   │
+    └───────────────────────────────────────────────────┘
 ```
 
 ## 🔧 Prerequisites
@@ -83,8 +96,10 @@ A production-ready demonstration of GPU-accelerated AI inference using **LangCha
 ### Local Development
 - **Java 21 LTS** (with `--enable-preview` flag)
 - **Maven 3.9+**
-- **NVIDIA GPU** with CUDA 12.2+ support
-- **CUDA Toolkit 12.2**
+- **.NET 10 SDK** ([Download](https://dotnet.microsoft.com/download/dotnet/10.0))
+- **.NET Aspire 13 CLI** (install native executable: `curl -sSL https://aspire.dev/install.sh | bash`)
+- **NVIDIA GPU** with CUDA 12.6+ support (optional, for GPU acceleration)
+- **CUDA Toolkit 12.6** (optional)
 - **Docker** (optional, for containerization)
 - **Git**
 
@@ -97,14 +112,37 @@ A production-ready demonstration of GPU-accelerated AI inference using **LangCha
 
 > **📘 For detailed setup instructions, see [SETUP.md](SETUP.md)**
 
-### 1. Clone Repository
+### Option A: Using .NET Aspire (Recommended) ⚡
+
+Run the entire application stack with one command:
+
+```bash
+# From repository root
+cd src/GpuAzure.AppHost
+dotnet run
+```
+
+This will:
+- ✅ Start Java Spring Boot backend (port 8080)
+- ✅ Start Blazor WebAssembly frontend (port 5000/5001)
+- ✅ Open Aspire Dashboard with service monitoring (port 15000)
+- ✅ Configure service discovery automatically
+
+**Access the application:**
+- **Blazor Frontend**: http://localhost:5000
+- **Java Backend API**: http://localhost:8080
+- **Aspire Dashboard**: http://localhost:15000
+
+### Option B: Manual Setup (Traditional)
+
+#### 1. Clone Repository
 
 ```bash
 git clone https://github.com/your-org/gpuonazure.git
 cd gpuonazure
 ```
 
-### 2. Install Build Tools
+#### 2. Install Build Tools
 
 ```bash
 # Linux
@@ -114,34 +152,127 @@ sudo apt-get update && sudo apt-get install -y cmake build-essential
 brew install cmake
 ```
 
-### 3. Download Models
+#### 3. Download Models
 
 ```bash
-./download-missing-models.sh
+./scripts/download-missing-models.sh
 ```
 
 Downloads Stable Diffusion v1.5 models (~5.2 GB):
 - Text Encoder, U-Net, VAE Decoder
 
-### 4. Build ONNX Runtime Extensions
+#### 4. Build ONNX Runtime Extensions
 
 ```bash
-./download-ortextensions.sh
+./scripts/download-ortextensions.sh
 ```
 
 Builds `libortextensions.so` (~3 MB, required for CLIP tokenizer).
 
-### 5. Run Application
+#### 5. Run Java Backend
 
 ```bash
 mvn spring-boot:run
 ```
 
-### 6. Access Web UI
+#### 6. Run Blazor Frontend (in separate terminal)
 
-Open browser: **http://localhost:8080**
+```bash
+cd src/BlazorFrontend/BlazorFrontend
+dotnet run
+```
+
+#### 7. Access Applications
+
+- **Blazor Frontend**: http://localhost:5000
+- **Java Backend API**: http://localhost:8080
 
 **🎨 Generate your first image!**
+
+## 🐳 DevContainer Setup
+
+This project includes a complete DevContainer configuration for VS Code and GitHub Codespaces with all required tools pre-installed.
+
+### Using VS Code
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+2. Install [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Open the project in VS Code
+4. Click "Reopen in Container" when prompted
+
+### Using GitHub Codespaces
+
+1. Click "Code" → "Codespaces" → "Create codespace on main"
+2. Wait for the environment to build (~5 minutes first time)
+3. Everything is pre-configured and ready to use!
+
+### What's Included
+
+The DevContainer includes:
+- ✅ Java 21 JDK with Maven
+- ✅ .NET 10 SDK with Aspire workload
+- ✅ CUDA Toolkit (optional - gracefully handled if unavailable)
+- ✅ Azure CLI
+- ✅ Docker-in-Docker
+- ✅ All VS Code extensions (Java, C#, Blazor, Docker, Azure)
+- ✅ Pre-configured debugging and tasks
+
+**Note**: 
+- ✅ **Works on laptops without GPU** - The DevContainer will build successfully even without GPU support
+- GPU support is automatically detected by VS Code if available
+- CPU mode works everywhere and is perfectly fine for development
+- For GPU-accelerated inference, deploy to Azure Container Apps with GPU profiles
+
+## 🌟 Running with .NET Aspire
+
+.NET Aspire 13 provides orchestration, service discovery, and observability for the entire application.
+
+### Start with Aspire Dashboard
+
+```bash
+cd src/GpuAzure.AppHost
+dotnet run
+```
+
+This will automatically:
+1. Start the Java Spring Boot backend on port 8080
+2. Start the Blazor frontend on port 5000/5001
+3. Configure service discovery between them
+4. Open the Aspire Dashboard at http://localhost:15000
+
+### Aspire Dashboard Features
+
+The dashboard provides:
+- **Service Status**: Real-time health of all services
+- **Logs**: Aggregated logs from Java and .NET applications
+- **Metrics**: Performance metrics and resource usage
+- **Traces**: Distributed tracing across service boundaries
+- **Environment**: View and modify environment variables
+
+### Service Discovery
+
+Services automatically discover each other:
+
+```csharp
+// In AppHost.cs
+var javaBackend = builder.AddExecutable("java-backend", "mvn", ...)
+    .WithHttpEndpoint(port: 8080, name: "http");
+
+var blazorFrontend = builder.AddProject<Projects.BlazorFrontend>("blazor-frontend")
+    .WithEnvironment("BackendUrl", javaBackend.GetEndpoint("http"));
+```
+
+No hardcoded URLs needed!
+
+### Benefits of Aspire
+
+- 🚀 **Fast Inner Loop**: Start entire stack with one command
+- 🔍 **Observability**: Built-in telemetry and monitoring
+- 🔌 **Service Discovery**: Automatic endpoint resolution
+- 🏥 **Health Checks**: Automated health monitoring
+- 📊 **Unified Dashboard**: Single view of all services
+
+**See [src/README.md](src/README.md) for complete Aspire documentation.**
 
 ## 🔨 Local Development
 

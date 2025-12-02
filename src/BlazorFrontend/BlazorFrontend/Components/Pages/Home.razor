@@ -1,0 +1,126 @@
+﻿@page "/"
+
+<PageTitle>GPU-Accelerated AI - Home</PageTitle>
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-gpu-card text-primary"></i>
+            GPU-Accelerated AI Platform
+        </h1>
+        <p class="lead text-muted">
+            Harness the power of GPU-accelerated Stable Diffusion and Text Embeddings
+            <br />powered by Java Spring Boot, LangChain4j, and ONNX Runtime
+        </p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-image display-1 text-primary mb-3"></i>
+                    <h5 class="card-title">Image Generation</h5>
+                    <p class="card-text">
+                        Generate stunning AI images from text prompts using Stable Diffusion v1.5 
+                        with GPU acceleration via CUDA.
+                    </p>
+                    <a href="/image-generator" class="btn btn-primary">
+                        Try Image Generator
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-text-paragraph display-1 text-success mb-3"></i>
+                    <h5 class="card-title">Text Embeddings</h5>
+                    <p class="card-text">
+                        Compare semantic similarity between texts using All-MiniLM-L6-v2 
+                        embeddings powered by LangChain4j.
+                    </p>
+                    <a href="/embeddings" class="btn btn-success">
+                        Compare Texts
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-speedometer2 display-1 text-info mb-3"></i>
+                    <h5 class="card-title">System Metrics</h5>
+                    <p class="card-text">
+                        Monitor GPU status, model availability, and system health 
+                        with real-time metrics and monitoring.
+                    </p>
+                    <a href="/metrics" class="btn btn-info">
+                        View Metrics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">
+                <i class="bi bi-star-fill text-warning"></i> Key Features
+            </h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>GPU-Accelerated Inference</strong> - CUDA 12.6 with ONNX Runtime
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>Stable Diffusion v1.5</strong> - High-quality image generation
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>Text Embeddings</strong> - Semantic similarity with MiniLM
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>Modern Stack</strong> - Java 21, .NET 10, Blazor WebAssembly
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>Cloud-Ready</strong> - Azure Container Apps with GPU support
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong>.NET Aspire</strong> - Orchestration and service discovery
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm bg-light">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-info-circle"></i> Architecture
+            </h5>
+            <p class="card-text">
+                This application demonstrates a modern microservices architecture:
+            </p>
+            <ul>
+                <li><strong>Java Backend:</strong> Spring Boot 3.2.5 with LangChain4j for AI inference</li>
+                <li><strong>Blazor Frontend:</strong> .NET 10 WebAssembly for interactive UI</li>
+                <li><strong>.NET Aspire:</strong> Orchestrates both services with service discovery</li>
+                <li><strong>ONNX Runtime:</strong> GPU-accelerated inference engine with CUDA 12.6</li>
+                <li><strong>Azure Container Apps:</strong> Scalable deployment with GPU workload profiles</li>
+            </ul>
+        </div>
+    </div>
+</div>
