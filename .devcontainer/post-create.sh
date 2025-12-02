@@ -56,5 +56,19 @@ echo "  1. Run Java backend: mvn spring-boot:run"
 echo "  2. Run Blazor frontend: cd src/BlazorFrontend && dotnet run"
 echo "  3. Run with Aspire: cd src/GpuAzure.AppHost && dotnet run"
 echo ""
-echo "NOTE: GPU support requires NVIDIA drivers on the host"
+# Check if GPU is available
+if command -v nvidia-smi &> /dev/null; then
+    echo "GPU Status: Checking..."
+    if nvidia-smi &> /dev/null; then
+        echo "✓ GPU detected and available"
+        nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+    else
+        echo "⚠ GPU not detected (nvidia-smi failed)"
+        echo "  Running in CPU-only mode"
+    fi
+else
+    echo "⚠ GPU not available (nvidia-smi not found)"
+    echo "  Running in CPU-only mode - This is fine for development"
+    echo "  GPU will be available when deployed to Azure Container Apps with GPU profile"
+fi
 echo "=========================================="

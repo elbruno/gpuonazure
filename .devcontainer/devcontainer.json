@@ -1,17 +1,17 @@
 {
   "name": "GPU Azure Development",
   "dockerFile": "Dockerfile",
-  
   "runArgs": [
-    "--gpus=all",
     "--cap-add=SYS_PTRACE",
-    "--security-opt=seccomp=unconfined"
+    "--security-opt=seccomp=unconfined",
+    "--privileged"
   ],
-
+  // GPU is auto-detected by VS Code if available
+  // To manually enable GPU, uncomment the line below:
+  // "hostRequirements": { "gpu": true },
   "mounts": [
     "source=${localWorkspaceFolder}/models,target=/workspace/models,type=bind,consistency=cached"
   ],
-
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "version": "latest",
@@ -21,7 +21,6 @@
       "version": "latest"
     }
   },
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -57,7 +56,6 @@
       }
     }
   },
-
   "forwardPorts": [
     8080,
     5000,
@@ -65,7 +63,6 @@
     15000,
     18888
   ],
-
   "portsAttributes": {
     "8080": {
       "label": "Java Backend API",
@@ -88,11 +85,8 @@
       "onAutoForward": "openBrowser"
     }
   },
-
   "postCreateCommand": "bash .devcontainer/post-create.sh",
-
   "remoteUser": "vscode",
-  
   "containerEnv": {
     "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk-amd64",
     "MAVEN_HOME": "/usr/share/maven",
